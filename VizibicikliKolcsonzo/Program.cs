@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Unicode;
 
 namespace VizibicikliKolcsonzo
 {
@@ -62,10 +63,26 @@ namespace VizibicikliKolcsonzo
                 Console.WriteLine($"\t{x.EOra}:{x.EPerc}-{x.VOra}:{x.VPerc} : {x.Nev}"));
 
             //8.
+            double Osszfelora()
+            {
+                double ossz = 0;
+                foreach (var item in kolcsonzesek)
+                {
+                    ossz += (item.VOra + item.VPerc / 60.0) - (item.EOra + item.EPerc / 60.0);
+                }
+                return ossz*2;
+            }
 
+            Console.WriteLine($"8. feladat: A napi bevétel: {Math.Ceiling(Osszfelora()) * 2400} Ft");
 
+            //9.
+            List<string> f = new List<string>();
+            kolcsonzesek.Where(x => x.Jazon == 'F').ToList().ForEach(x => f.Add($"{x.EOra}:{x.EPerc}-{x.VOra}:{x.VPerc} : {x.Nev}"));
+            File.WriteAllLines("F.txt", f, encoding: System.Text.Encoding.UTF8);
 
-
+            //10.
+            Console.WriteLine("10. feladat: Statisztika");
+            kolcsonzesek.GroupBy(x => x.Jazon).OrderBy(x => x.Key).ToList().ForEach(x => Console.WriteLine($"\t{x.Key} - {x.Count()}"));
         }
     }
 }
